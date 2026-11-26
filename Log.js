@@ -20,9 +20,26 @@ var latest; // time/date of latest change
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
-// TAP HEADER
+/* TAP HEADER
 id('headerTitle').addEventListener('click',function() {
 	window.location.href='index.html';
+})
+*/
+// DRAG TO EXIT
+id('main').addEventListener('touchstart', function(event) {
+    // console.log(event.changedTouches.length+" touches");
+    dragStart.x=event.changedTouches[0].clientX;
+    dragStart.y=event.changedTouches[0].clientY;
+    // console.log('start drag at '+dragStart.x+','+dragStart.y);
+})
+id('main').addEventListener('touchend', function(event) {
+    var drag={};
+    drag.x=dragStart.x-event.changedTouches[0].clientX;
+    drag.y=dragStart.y-event.changedTouches[0].clientY;
+    if(Math.abs(drag.y)>50) return; // ignore vertical drags
+    if(drag.x<-50) { // drag right to EXIT
+    	window.location.href='index.html';
+    }
 })
 // TAP SYNC ICON
 id('buttonSync').addEventListener('click',connect);

@@ -34,7 +34,12 @@ id('main').addEventListener('touchstart', function(event) {
 id('main').addEventListener('touchend', function(event) {
     var dragX=event.changedTouches[0].clientX-dragStart.x;
     if(view=='list') { // list view
-    	if(account && dragX>50) { // drag right to decrease depth...
+    	if(dragX>50) { // drag right to decrease depth...
+    		if(!account) {
+    			console.log('EXIT');
+    			window.location.href='index.html';
+    			return;
+    		}
         	console.log("BACK");
 	    	account=null;
 	    	toggleDialog('txDialog',false);
@@ -68,10 +73,12 @@ id('main').addEventListener('touchend', function(event) {
     	}
     }
 })
-// TAP HEADER - DATA MENU
+// TAP HEADER
+/*
 id('headerTitle').addEventListener('click',function() {
 	window.location='index.html';
 })
+*/
 id('buttonSync').addEventListener('click',connect);
 // NEW BUTTON: create new account or transaction
 id('buttonNew').addEventListener('click',function() {

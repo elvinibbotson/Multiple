@@ -10,7 +10,7 @@
     <!--style>img{width:100px;height:100px;}</style-->
     <script src='https://cdn.jsdelivr.net/npm/@inrupt/solid-client-authn-browser/dist/solid-client-authn.bundle.js'></script>
     <meta name="application-name" content="Multiple">
-    <style>
+    <!--style>
     	body {background-color: #444;}
 		#buttonGroup {
 			display: grid;
@@ -20,7 +20,7 @@
 			gap: 10px;
 		}
     	.moduleButton {width: 100px; height: 100px; border-radius: 20px;}
-    </style>
+    </style-->
 </head>
 <body>
 	<div id='buttonGroup'>
@@ -29,7 +29,8 @@
 		<img class='moduleButton' src='Money.png' onclick='launch("Money")'/>
 		<img class='moduleButton' src='Charge.png' onclick='launch("Charge")'/>
 		<img class='moduleButton' src='Energy.png' onclick='launch("Energy")'/>
-	</div>
+		<img class='moduleButton' src='Locker.png' onclick='launch("Locker")'/>
+		<img class='moduleButton' src='Health.png' onclick='launch("Health")'/>
 <script>
 	/* SIZE MODULE IMAGES
 	var ms=Math.round(window.screen.width*0.4);
@@ -40,6 +41,7 @@
 		modules[i].height=ms;
 	}
 	*/
+	document.getElementById('buttonGroup').style.width=window.screen.width+'px';
 	document.getElementById('buttonGroup').style.height=window.screen.width+'px';
 	// LAUNCH APP MODULE
 	function launch(module) {

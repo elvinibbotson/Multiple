@@ -25,7 +25,7 @@ input[type=checkbox] {
     height: 24px;
     margin-left: 10px;
     margin-right: 10px;
-    float: left;
+    /* float: left; */
 }
 input[type=date] {
     width: 20%;
@@ -76,4 +76,3 @@ li {
 	grid-template-rows:  repeat(3, auto);
 	gap: 10px;
 }
-.moduleButton {width: 100px; height: 100px; border-radius: 20px;}
