@@ -32,7 +32,11 @@ id('main').addEventListener('touchend', function(event) {
     drag.x=dragStart.x-event.changedTouches[0].clientX;
     drag.y=dragStart.y-event.changedTouches[0].clientY;
     if(Math.abs(drag.y)>50) return; // ignore vertical drags
-    if((drag.x<-50)&&(depth>0)) { // drag right to decrease depth...
+    if(drag.x<-50) { // drag right to go back/decrease depth...
+    	if(depth<1) { // canot decrease depth so exit
+    		window.location.href='index.html';
+    		return;
+    	}
         console.log('path: '+path);
         if(path[path.length-1]=='CHECK') {
             path.pop();
@@ -81,10 +85,11 @@ function showDialog(dialog,show) {
     }
     console.log('current dialog: '+currentDialog);
 }
-// TAP ON HEADER
+/* TAP ON HEADER
 id('heading').addEventListener('click',function() {
 	window.location.href='index.html';
 })
+*/
 id('buttonSync').addEventListener('click',connect);
 // ADD NEW ITEM
 id('buttonNew').addEventListener('click', function(){
