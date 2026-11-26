@@ -290,7 +290,7 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 });
 async function sync() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
-	latest=window.localStorage.getItem('latest');
+	// latest=window.localStorage.getItem('latest');
 	console.log('latest is '+latest);
 	message('SYNC - DOWNLOAD?',true);
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/LogData.json',
