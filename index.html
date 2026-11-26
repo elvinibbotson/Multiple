@@ -12,8 +12,14 @@
     <meta name="application-name" content="Multiple">
     <style>
     	body {background-color: #444;}
-		#buttonGroup {display: flex; align-items: center; justify-content: center}
-    	.moduleButton {width: 100px; height: 100px; border-radius: 20px; margin: 5px;}
+		#buttonGroup {
+			display: grid;
+			place-content: center;
+			grid-template-columns: repeat(3, auto);
+			grid-template-rows:  repeat(3, auto);
+			gap: 10px;
+		}
+    	.moduleButton {width: 100px; height: 100px; border-radius: 20px;}
     </style>
 </head>
 <body>
@@ -21,6 +27,8 @@
 		<img class='moduleButton' src='Lists.png' onclick='launch("Lists")'/>
 		<img class='moduleButton' src='Log.png' onclick='launch("Log")'/>
 		<img class='moduleButton' src='Money.png' onclick='launch("Money")'/>
+		<img class='moduleButton' src='Charge.png' onclick='launch("Charge")'/>
+		<img class='moduleButton' src='Energy.png' onclick='launch("Energy")'/>
 	</div>
 <script>
 	/* SIZE MODULE IMAGES
