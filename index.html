@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="black">
+    <title>Compendium</title>
+    <!--link rel="stylesheet" type="text/css" href="Lists.css"-->
+    <link rel="manifest" href="manifest.json">
+    <!--style>img{width:100px;height:100px;}</style-->
+    <script src='https://cdn.jsdelivr.net/npm/@inrupt/solid-client-authn-browser/dist/solid-client-authn.bundle.js'></script>
+    <meta name="application-name" content="Compendium">
+    <style>
+    	body {background-color: #444;}
+		#buttonGroup {display: flex; align-items: center; justify-content: center; margin-top: 50px;}
+    	.moduleButton {width: 100px; height: 100px; border-radius: 20px; margin: 5px;}
+    </style>
+</head>
+<body>
+	<div id='buttonGroup'>
+		<img class='moduleButton' src='Lists.png' onclick='launch("Lists")'/>
+		<img class='moduleButton' src='Log.png' onclick='launch("Log")'/>
+		<img class='moduleButton' src='Money.png' onclick='launch("Money")'/>
+	</div>
+<script>
+	/* SIZE MODULE IMAGES
+	var ms=Math.round(window.screen.width*0.4);
+	console.log('module size: '+ms+'px');
+	modules=document.getElementsByClassName('moduleButton');
+	for(var i in modules) {
+		modules[i].width=ms;
+		modules[i].height=ms;
+	}
+	*/
+	// LAUNCH APP MODULE
+	function launch(module) {
+		window.location.href=module+'.html';
+	}
+	// SERVICE WORKER
+	if (navigator.serviceWorker.controller) {
+		console.log('Active service worker found, no need to register')
+	}
+	else
+	{ // Register the ServiceWorker
+		navigator.serviceWorker.register('sw.js', {
+			scope: '/Compendium/'
+		}).then(function(reg) {
+			console.log('Service worker has been registered for scope:'+ reg.scope);
+		});
+	}
+</script>
+</body>
+</html>

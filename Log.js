@@ -1,0 +1,380 @@
+function id(el) {
+	// console.log("return element whose id is "+el);
+	return document.getElementById(el);
+}
+'use strict';
+// GLOBAL VARIABLES	
+var dragStart={};
+var drag={};
+var logData=null;
+var logs=[]; // all logs
+var list=[]; // listed logs
+var log=null;
+var logIndex=null;
+var tags=[];
+var findTag=null;
+var currentDialog=null;
+var months="JanFebMarAprMayJunJulAugSepOctNovDec";
+var syncDay; // last sync
+var latest; // time/date of latest change
+// solid session & authentication...
+const auth=solidClientAuthentication;
+const session=auth.getDefaultSession();
+// TAP HEADER
+id('headerTitle').addEventListener('click',function() {
+	window.location.href='index.html';
+})
+// TAP SYNC ICON
+id('buttonSync').addEventListener('click',connect);
+id('buttonFind').addEventListener('click', function() { // show the search dialog
+	toggleDialog('findDialog',true);
+	id('findTagChooser').selectedIndex=-1;
+	console.log('find - tags: '+id('findTagChooser').options.length);
+});
+id('findTagChooser').addEventListener('change',function() {
+	findTag=tags[id('findTagChooser').selectedIndex];
+	console.log('find items with tag '+findTag);
+	populateList();
+	toggleDialog('findDialog',false);
+})
+// NEW BUTTON
+id('buttonNew').addEventListener('click', function() { // show the log dialog
+	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
+    toggleDialog('logDialog',true);
+	var d=new Date().toISOString();
+	id('logDateField').value=d.substr(0,10);
+	id('logDaysField').value=1;
+	id('logTextField').value="";
+	log={};
+	log.tags=[];
+	listLogTags();
+	logIndex=null;
+	id("buttonDeleteLog").style.display='none';
+	id('buttonSaveLog').style.display='none';
+	id('buttonAddLog').style.display='block';
+});
+// CHOOSE A TAG
+id('tagChooser').addEventListener('change', function() {
+	var n=id('tagChooser').selectedIndex;
+	var tag=id('tagChooser').options.item(n).text;
+	console.log("select tag "+tag);
+	if(tag.startsWith('+')) { // define a new tag
+		toggleDialog('newTagDialog',true);
+		return;
+	}
+	else if(log.tags.indexOf(tag)<0) {
+		log.tags.push(tag);
+		listLogTags();
+	}
+    // toggleDialog('tagDialog',false);
+    toggleDialog('logDialog',true);
+});
+// INPUT NEW TAG
+id('newTagField').addEventListener('change', function() {
+  	var tag=id('newTagField').value;
+	console.log("new tag: "+tag);
+	if(tags.indexOf(tag)<0) {
+		console.log('define new tag: '+tag);
+		tags.push(tag);
+		var opt=document.createElement('option');
+		opt.text=tag;
+		id('tagChooser').options.add(opt);
+		opt=document.createElement('option');
+		opt.text=tag;
+		id('findTagChooser').options.add(opt);
+		log.tags.push(tag);
+		console.log(tag+' added to tag list, tag search and log tags');
+		listLogTags();
+	}
+	toggleDialog('logDialog',true);
+});
+// ADD NEW LOG
+id('buttonAddLog').addEventListener('click',function() {
+	saveLog(true);
+})
+// UPDATE LOG
+id('buttonSaveLog').addEventListener('click', function() {
+	saveLog(false);
+})
+// SAVE LOG
+function saveLog(adding) {
+	log.date=id('logDateField').value;
+	log.days=id('logDaysField').value;
+	log.text=id('logTextField').value;
+    toggleDialog('logDialog',false);
+	console.log("save log - date: "+log.date+" "+log.days+" days text: "+log.text);
+	if(adding) logs.push(log);
+	else logs[logIndex]=log;
+	save();
+	populateList();
+};
+// DELETE LOG
+id('buttonDeleteLog').addEventListener('click', function() {
+	logs.splice(logIndex,1);
+	toggleDialog('logDialog',false);
+	save();
+	populateList();
+});
+// CLOSE DIALOG
+id('curtain').addEventListener('click',function() {
+	toggleDialog(currentDialog,false);
+})
+// SHOW/HIDE DIALOGS
+function toggleDialog(d, visible) {
+    // console.log('toggle '+d+' - '+visible);
+    if(currentDialog) id(currentDialog).style.display='none';
+    if(visible) {
+    	currentDialog=d;
+    	id(d).style.display='block';
+    	id('buttonNew').style.display='none';
+    	id('buttonFind').style.display='none';
+    }
+    else {
+    	id('buttonNew').style.display=(findTag)?'none':'block';
+    	id('buttonFind').style.display=(findTag)?'none':'block';
+    }
+    id('curtain').style.height=(visible)?'100%':'0';
+}
+// OPEN SELECTED LOG FOR EDITING
+function openLog() {
+	console.log("open log: "+logIndex);
+	log=logs[logIndex];
+	toggleDialog('logDialog',true);
+	id('logDateField').value=log.date;
+	id('logDaysField').value=log.days;
+	id('logTextField').value=log.text;
+	if(!log.tags) log.tags=[];
+	listLogTags();
+	id('buttonAddLog').style.display='none';
+	id('buttonSaveLog').style.display='block';
+	id('buttonDeleteLog').style.display='block';
+}
+// POPULATE LIST OF TAGS FOR CURRENT LOG
+function listLogTags() {
+	var item=null;
+  	id('logTagList').innerHTML="";
+	item=document.createElement('li');
+	item.textContent="+ NEW TAG"; // add new tag
+	item.addEventListener('click', function() {
+		toggleDialog('tagDialog',true);
+		id('tagChooser').selectedIndex=-1;
+		id('newTagField').value="";
+	});
+	id('logTagList').appendChild(item);
+	for(var i in log.tags) {
+		item=document.createElement('li');
+		item.addEventListener('click', function() {
+			var tag=this.textContent;
+			console.log("delete tag "+tag);
+			var n=log.tags.indexOf(tag)
+			log.tags.splice(n,1); // remove from log.tags
+			listLogTags();
+		});
+		item.textContent=log.tags[i];
+		id('logTagList').appendChild(item);
+	}
+}
+// POPULATE LOGS LIST
+function populateList() {
+	console.log("populate log list for search "+findTag);
+	if(findTag) id('headerTitle').textContent=findTag;
+	else id('headerTitle').textContent='Logs';
+	logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
+	list=[];
+	for(var i=0;i<logs.length;i++) { // build list of logs to show
+		if(findTag) { // list logs matching search
+			if(logs[i].tags.indexOf(findTag)>=0)
+			{
+				console.log("find tag match in "+logs[i].text);
+				list.push(i);
+			}
+		}
+		else { // no search - list all logs
+			console.log("no search");
+			list.push(i);
+		}
+	}
+	console.log('list '+list.length+' logs');
+	id('list').innerHTML=""; // clear list
+	var html="";
+	var d="";
+	var mon=0;
+	for(var i=list.length-1; i>=0; i--) { // build list - latest first
+  		var listItem = document.createElement('li');
+		listItem.index=list[i]; // index of listed log
+		log=logs[list[i]]; // listed log
+	 	listItem.classList.add('log-item');
+		listItem.addEventListener('click', function(){logIndex=this.index; openLog();});
+		html="<span class='log-text'>"+log.text+"</span><br>";
+		d=log.date;
+		mon=parseInt(d.substr(5,2))-1;
+		mon*=3;
+		d=d.substr(8,2)+" "+months.substr(mon,3)+" "+d.substr(2,2);
+		html+="<span class='log-date'>"+d;
+		if(log.days>1) html+="...<i>"+log.days+" days</i>";
+		html+="</span><span class='log-tags'>";
+		for(var j in log.tags) {
+			html+=log.tags[j]+" "
+		}
+		html+="</span><p>";
+		listItem.innerHTML=html;
+		id('list').appendChild(listItem);
+  	}
+  	id('buttonNew').style.display=(findTag)?'none':'block';;
+  	id('buttonFind').style.display=(findTag)?'none':'block';
+}
+// DATA
+function load() {
+	var data=localStorage.getItem('LogData');
+	if(!data) {
+		message('NO DATA');
+		return;
+	}
+	logs=JSON.parse(data).logs;
+	console.log(logs.length+' logs read');
+	tags=[]; // build tag list
+	for(var i=0;i<logs.length;i++) {
+		for(var j in logs[i].tags) { // for each tag in each log...
+			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
+				tags.push(logs[i].tags[j]); // ...add it
+				console.log('tag added');
+			}
+		}
+	}
+	tags.sort(); // sort tags alphabetically and populate tag choosers
+	for(i in tags) {
+		var tag=document.createElement('option');
+		tag.text=tags[i];
+		tag=document.createElement('option');
+		tag.text=tags[i];
+		id('tagChooser').options.add(tag);
+		var stag=document.createElement('option');
+		stag.text=tags[i];
+		stag=document.createElement('option');
+		stag.text=tags[i];
+		id('findTagChooser').options.add(stag);
+	}
+	tag=document.createElement('option');
+	tag.text='+NEW';
+	id('tagChooser').options.add(tag);
+	console.log('search tags: '+id('findTagChooser').options.length);
+	populateList();
+}
+function save() {
+	var json=JSON.stringify(logs);
+	// console.log('data to save: '+json);
+	window.localStorage.setItem('LogData',json);
+	console.log('data saved to LogData');
+	latest=new Date().toString();
+	window.localStorage.setItem('latest',latest);
+}
+// SOLID CODE
+function connect() {
+	message('CONNECT - logging in');
+	try {
+		auth.login({
+    		oidcIssuer:"https://privatedatapod.com",
+    		redirectUrl:window.location.href,
+    		clientName:"Log"
+    	});
+	}
+	catch(error) {console.error(error.message);}
+}
+auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
+	if(session.info.isLoggedIn) {
+		console.log('logged in as '+session.info.webId);
+		message('LOGGED IN',false);
+    	sync();
+	}
+});
+async function sync() {
+	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
+	latest=window.localStorage.getItem('latest');
+	console.log('latest is '+latest);
+	message('SYNC - DOWNLOAD?',true);
+	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/LogData.json',
+	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
+		method: 'GET',
+		headers: {'If-Modified-Since':latest}
+	});
+	console.log('response: '+response);
+	if(response.ok) {
+		logs=await response.json();
+		console.log('response - last modified: '+response.lastModified);
+		// logs=body.logs;
+		save();
+		message(logs.length+' logs downloaded',false);
+		disconnect();
+	}
+	else { // local data is newer - upload to pod
+		message('|no download - UPLOAD',false);
+		upload();
+	}
+	syncDay=new Date()/86400000;
+	window.localStorage.setItem('syncDay',syncDay);
+	load(); // ensure working with latest dataset
+}
+async function upload() {
+  	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
+  	console.log("UPLOAD",false);
+	var fileName="drive/LogData.json";
+	console.log(logs.length+" logs - upload");
+	if(logs.length<1) { // NEW
+		message('NO DATA');
+		disconnect();
+		return;
+	}
+	var data={'logs': logs};
+	var json=JSON.stringify(data);
+	try {
+		response=await session.fetch('https://elvinibbotson.privatedatapod.com/'+fileName,{
+			method:'PUT',
+			headers:{'Content-Type':'application/json'},
+			body:json
+		});
+		if(!response.ok) {
+    		throw new Error(`Response status: ${response.status}`);
+    	}
+    	console.log('data saved, status: '+response.status);
+    	message(logs.length+' logs uploaded');
+    	syncDay=new Date()/86400000;
+		window.localStorage.setItem('syncDay',syncDay);
+		disconnect();
+	}
+	catch(error) {console.error(error.message);alert(error.message);}
+}
+async function disconnect() {
+	var response=await session.logout({logoutType: 'app'});
+	console.log('logout response: ${response.status}');
+}
+// DISPLAY MESSAGE
+function message(text,clear) {
+	console.log(text);
+	if(clear) id('message').innerText=text;
+	else id('message').innerText+='\n'+text;
+	toggleDialog('messageDialog',true);
+}
+// START-UP CODE
+latest=window.localStorage.getItem('latest');
+if(!latest) {
+	latest=new Date(0).toString(); // default to 1970
+	window.localStorage.setItem('latest',latest);
+}
+console.log('latest change: '+latest);
+syncDay=window.localStorage.getItem('syncDay');
+if(!syncDay) {
+	syncDay=new Date(0)/86400000; // default to 1970
+	window.localStorage.setItem('syncDay',syncDay);
+}
+load();
+if(new Date()/86400000-syncDay>5) message('More than 5 days since last sync.');
+// implement service worker if browser is PWA friendly 
+if (navigator.serviceWorker.controller) {
+	console.log('Active service worker found, no need to register')
+} else { //Register the ServiceWorker
+	navigator.serviceWorker.register('sw.js', {
+		scope: '/Log/'
+	}).then(function(reg) {
+		console.log('Service worker has been registered for scope:'+ reg.scope);
+	});
+}
