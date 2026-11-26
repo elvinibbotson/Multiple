@@ -361,7 +361,7 @@ function listTransactions() {
 	list=[];
 	for(var i=0;i<logs.length;i++) { // build list of indeces of account logs
 		if(logs[i].account==account.name) {
-			console.log('add log '+i+': '+logs[i].text+'; '+logs[i].amount+'; transfer: '+logs[i].transfer);
+			// console.log('add log '+i+': '+logs[i].text+'; '+logs[i].amount+'; transfer: '+logs[i].transfer);
 			list.push(i);
 		}
 	}
@@ -392,7 +392,7 @@ function listTransactions() {
 	balance=0;
 	console.log("list "+list.length+" transactions - earliest is "+list[0]+' £'+logs[list[0]].amount);
 	for(var i in list) {
-		console.log('check transaction '+i+': '+logs[list[i]].text);
+		// console.log('check transaction '+i+': '+logs[list[i]].text);
 		balance+=logs[list[i]].amount;
 		logs[list[i]].balance=balance;
 	}
@@ -517,6 +517,7 @@ function drawTotals() {
 function load() {
 	var data=localStorage.getItem('MoneyData');
 	if(!data) {
+		latest=new Date(0).toString();
 		message('No data - restore backup?');
 		return;
 	}
@@ -591,25 +592,6 @@ function save() {
 	console.log(logs.length+' logs saved');
 	latest=new Date().toString();
 	window.localStorage.setItem('latest',latest);
-	writeData();
-}
-async function writeData() { // new code to save to JSON file at GitHub...
-	var data={'logs':logs,'totals':totals};
-	console.log('upload '+logs.length+' logs');
-	var json=JSON.stringify(data);
-	try {
-		response=await fetch('https://elvinibbotson.github.io/Multiple/MoneyData.json',{
-			method:'POST',
-			headers:{'Content-Type':'application/json'},
-			body:json
-		});
-		if(!response.ok) {
-    		throw new Error(`Response status: ${response.status}`);
-    	}
-    	console.log('data uploaded, status: '+response.status);
-    	message(logs.length+' logs uploaded');
-	}
-	catch(error) {console.error(error.message);alert(error.message);}
 }
 // SOLID CODE
 function connect() {
@@ -632,7 +614,6 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 });
 async function sync() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
-	latest=window.localStorage.getItem('latest');
 	console.log('latest is '+latest);
 	message('SYNC - DOWNLOAD?',true);
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/MoneyData.json',
