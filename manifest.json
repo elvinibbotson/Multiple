@@ -3,7 +3,7 @@
   "short_name": "Multiple",
   "icons": [
 	{
-		"src": "Lists.png",
+		"src": "Multiple.png",
 		"sizes": "512x512",
 		"type": "image/png",
 		"purpose": "any"
