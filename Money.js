@@ -380,7 +380,7 @@ function listTransactions() {
 		logs.splice(earliest,1); // ...and delete what was earliest log...
 		console.log('list of '+list.length+' now starts with '+logs[list[0]].text);
 		// console.log(' and ends with '+logs[list[list.length-1]].text);
-		save(); // writeData(); WAS saveLogs();
+		// save(); // writeData(); WAS saveLogs();
 		listTransactions(); // recursion
 	}
 	var item=null;
@@ -599,7 +599,7 @@ async function writeData() { // new code to save to JSON file at GitHub...
 	var json=JSON.stringify(data);
 	try {
 		response=await fetch('https://elvinibbotson.github.io/Multiple/MoneyData.json',{
-			method:'PUT',
+			method:'POST',
 			headers:{'Content-Type':'application/json'},
 			body:json
 		});
