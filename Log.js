@@ -228,6 +228,7 @@ function load() {
 	var data=localStorage.getItem('LogData');
 	if(!data) {
 		message('NO DATA');
+		latest=new Date(0).toString();
 		return;
 	}
 	logs=JSON.parse(data).logs;
@@ -297,7 +298,7 @@ async function sync() {
 		method: 'GET',
 		headers: {'If-Modified-Since':latest}
 	});
-	console.log('response: '+response);
+	console.log('response: '+response.ok);
 	if(response.ok) {
 		logs=await response.json();
 		console.log('response - last modified: '+response.lastModified);
