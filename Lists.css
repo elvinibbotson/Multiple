@@ -1,3 +1,4 @@
+/*
 html, body {
   padding: 0;
   margin: 0;
@@ -84,6 +85,7 @@ li {
 	background-color: #444;
 	display: block;
 }
+*/
 .dialog {
   	position: fixed;
 	left: 0;

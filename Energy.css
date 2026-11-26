@@ -1,3 +1,4 @@
+/*
 html, body {
   display: -webkit-box;
   display: -webkit-flex;
@@ -25,6 +26,7 @@ input {
 	background: none;
 	border: solid white 1px;
 }
+*/
 .text-button {
 	border: none;
 	margin: 10px;
