@@ -4,12 +4,12 @@
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="black">
-    <title>Compendium</title>
+    <title>Multiple</title>
     <!--link rel="stylesheet" type="text/css" href="Lists.css"-->
     <link rel="manifest" href="manifest.json">
     <!--style>img{width:100px;height:100px;}</style-->
     <script src='https://cdn.jsdelivr.net/npm/@inrupt/solid-client-authn-browser/dist/solid-client-authn.bundle.js'></script>
-    <meta name="application-name" content="Compendium">
+    <meta name="application-name" content="Multiple">
     <style>
     	body {background-color: #444;}
 		#buttonGroup {display: flex; align-items: center; justify-content: center; margin-top: 50px;}
@@ -32,6 +32,7 @@
 		modules[i].height=ms;
 	}
 	*/
+	id('buttonGroup').style.height=window.screen.width+'px';
 	// LAUNCH APP MODULE
 	function launch(module) {
 		window.location.href=module+'.html';
@@ -43,7 +44,7 @@
 	else
 	{ // Register the ServiceWorker
 		navigator.serviceWorker.register('sw.js', {
-			scope: '/Compendium/'
+			scope: '/Multiple/'
 		}).then(function(reg) {
 			console.log('Service worker has been registered for scope:'+ reg.scope);
 		});

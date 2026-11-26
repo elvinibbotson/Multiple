@@ -591,6 +591,25 @@ function save() {
 	console.log(logs.length+' logs saved');
 	latest=new Date().toString();
 	window.localStorage.setItem('latest',latest);
+	writeData();
+}
+async function writeData() { // new code to save to JSON file at GitHub...
+	var data={'logs':logs,'totals':totals};
+	console.log('upload '+logs.length+' logs');
+	var json=JSON.stringify(data);
+	try {
+		response=await fetch('https://elvinibbotson.github.io/Multiple/MoneyData.json',{
+			method:'PUT',
+			headers:{'Content-Type':'application/json'},
+			body:json
+		});
+		if(!response.ok) {
+    		throw new Error(`Response status: ${response.status}`);
+    	}
+    	console.log('data uploaded, status: '+response.status);
+    	message(logs.length+' logs uploaded');
+	}
+	catch(error) {console.error(error.message);alert(error.message);}
 }
 // SOLID CODE
 function connect() {
@@ -646,13 +665,11 @@ async function upload() {
   	console.log("UPLOAD",false);
 	var fileName="drive/MoneyData.json";
 	console.log(logs.length+" logs - upload");
-	
 	if(logs.length<1) {
 		message('NO DATA');
 		disconnect();
 		return;
 	}
-	
 	var data={'logs':logs,'totals':totals};
   	var json=JSON.stringify(data);
 	try {
@@ -728,7 +745,7 @@ if(!syncDay) {
 }
 load();
 if(new Date()/86400000-syncDay>5) message('More than 5 days since last sync.');
-// SERVICE WORKER
+/* SERVICE WORKER
 if(navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
 }
@@ -737,4 +754,5 @@ else { // Register the ServiceWorker
 	    console.log('Service worker has been registered for scope:'+ reg.scope);
 	});
 }
+*/
  
