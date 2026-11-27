@@ -70,6 +70,13 @@ id('buttonNew').addEventListener('click', function() { // show the log dialog
 	id('buttonSaveLog').style.display='none';
 	id('buttonAddLog').style.display='block';
 });
+// EDIT LOG CONTENT
+id('logTextField').addEventListener('change',setSave);
+// ALLOW SAVING OF UPDATED TRANSACTION
+function setSave() {
+	console.log('transaction changed');
+	if(id('buttonAddLog').style.display!='block') id('buttonSaveLog').style.display='block';
+}
 // CHOOSE A TAG
 id('tagChooser').addEventListener('change', function() {
 	var n=id('tagChooser').selectedIndex;
@@ -163,7 +170,7 @@ function openLog() {
 	if(!log.tags) log.tags=[];
 	listLogTags();
 	id('buttonAddLog').style.display='none';
-	id('buttonSaveLog').style.display='block';
+	id('buttonSaveLog').style.display='none';
 	id('buttonDeleteLog').style.display='block';
 }
 // POPULATE LIST OF TAGS FOR CURRENT LOG
@@ -207,7 +214,7 @@ function populateList() {
 			}
 		}
 		else { // no search - list all logs
-			console.log("no search");
+			// console.log("no search");
 			list.push(i);
 		}
 	}
@@ -248,15 +255,17 @@ function load() {
 		latest=new Date(0);
 		return;
 	}
-	data=JSON.parse(data);data.timestamp;
+	data=JSON.parse(data);
+	latest=data.timestamp;
+	if(!latest) latest=new Date(0);
 	logs=data.logs;
-	console.log(logs.length+' logs read');
+	console.log(logs.length+' logs read; latest: '+latest);
 	tags=[]; // build tag list
 	for(var i=0;i<logs.length;i++) {
 		for(var j in logs[i].tags) { // for each tag in each log...
 			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
 				tags.push(logs[i].tags[j]); // ...add it
-				console.log('tag added');
+				// console.log('tag added');
 			}
 		}
 	}
@@ -374,12 +383,13 @@ function message(text,clear) {
 	toggleDialog('messageDialog',true);
 }
 // START-UP CODE
-latest=window.localStorage.getItem('latest');
-if(!latest) {
+// latest=window.localStorage.getItem('latest');
+/* if(!latest) {
 	latest=new Date(0).toString(); // default to 1970
 	window.localStorage.setItem('latest',latest);
 }
-console.log('latest change: '+latest);
+*/
+// console.log('latest change: '+latest);
 syncDay=window.localStorage.getItem('syncDay');
 if(!syncDay) {
 	syncDay=new Date(0)/86400000; // default to 1970

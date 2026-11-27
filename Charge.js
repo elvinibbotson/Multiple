@@ -13,7 +13,8 @@ var logData=null;
 var logIndex=null;
 var currentLog=null
 var currentDialog;
-var startX;
+var dragStart={};
+var dragX;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var syncDay; // latest sync
 var latest; // latest change
@@ -21,9 +22,22 @@ var capacity=48; // usable battery capacity (kWh) for Peugeot e-208
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
-// TAP HEADER
+/* TAP HEADER
 id('headerTitle').addEventListener('click',function() {
 	window.location.href='index.html';
+})
+*/
+// SWIPE RIGHT TO EXIT
+id('main').addEventListener('touchstart', function(event) {
+    dragStart.x=event.changedTouches[0].clientX;
+    dragStart.y=event.changedTouches[0].clientY;
+})
+id('main').addEventListener('touchend', function(event) {
+    var dragX=event.changedTouches[0].clientX-dragStart.x;
+    if(dragX>50) { // drag right to decrease depth...
+    	console.log('EXIT');
+    	window.location.href='index.html';
+    }
 })
 // TAP SYNC ICON
 id('buttonSync').addEventListener('click',connect);
