@@ -396,21 +396,23 @@ function populateList() {
 function load() {
 	var data=localStorage.getItem('ListsData');
 	if(!data) {
-		latest=new Date(0).toString();
+		latest=new Date(0);
 		message('no data - sync');
 		return;
 	}
-	items=JSON.parse(data);
+	data=JSON.parse(data);
+	latest=data.timestamp;
+	if(!latest) latest=new Date(0);
+	items=data.items;
 	console.log(items.length+' items');
 	list.path='';
 	loadList();
 }
 function save() {
-	var data=JSON.stringify(items);
-	window.localStorage.setItem('ListsData',data);
+	var data={"timestamp":new Date(), "items":items};
+	var json=JSON.stringify(data);
+	window.localStorage.setItem('ListsData',json);
 	console.log(items.length+' items saved');
-	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
 }
 // SOLID CODE
 function connect() {
@@ -496,11 +498,13 @@ function message(text) {
 	showDialog('messageDialog',true);
 }
 // START-UP CODE
+/*
 latest=window.localStorage.getItem('latest');
 if(!latest) {
 	latest=new Date(0).toString(); // default to 1970
 	window.localStorage.setItem('latest',latest);
 }
+*/
 syncDay=window.localStorage.getItem('syncDay');
 if(!syncDay) {
 	syncDay=new Date(0)/86400000; // default to 1970

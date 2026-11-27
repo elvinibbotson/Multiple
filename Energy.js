@@ -385,19 +385,23 @@ function selectLog() {
 function load() {
 	var data=localStorage.getItem('EnergyData');
 	if(!data) {
-		latest=new Date(0).toString();
+		latest=new Date(0);
 		message('No data - sync');
 		return;
 	}
 	console.log('data: '+data.length+' bytes');
-    logs=JSON.parse(data);
+	data=JSON.parse(data);
+	latest=data.timestamp;
+	if(!latest) latest=new Date(0);
+    logs=data.logs;
     console.log(logs.length+' logs read');
     logs.sort(function(a,b) {return Date.parse(a.date)-Date.parse(b.date)}); // date order
 	populateList();
 }
 function save() {
-	var data=JSON.stringify(logs);
-	window.localStorage.setItem('EnergyData',data);
+	var data={"timestamp":new Date(),"logs":logs}
+	var json=JSON.stringify(data);
+	window.localStorage.setItem('EnergyData',json);
 	console.log('data saved to EnergyData');
 	latest=new Date().toString();
 	window.localStorage.setItem('latest',latest);
@@ -500,8 +504,10 @@ id("background").width=scr.w;
 id("background").height=scr.h;
 canvas=id('canvas').getContext('2d');
 background=id('background').getContext('2d');
+/*
 latest=window.localStorage.getItem('latest');
 console.log('latest change: '+latest);
+*/
 syncDay=window.localStorage.getItem('syncDay');
 console.log('latest sync: '+syncDay);
 if(!syncDay) {

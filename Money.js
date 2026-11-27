@@ -524,11 +524,14 @@ function drawTotals() {
 function load() {
 	var data=localStorage.getItem('MoneyData');
 	if(!data) {
-		latest=new Date(0).toString();
+		latest=new Date(0);
 		message('No data - restore backup?');
 		return;
 	}
-	logs=JSON.parse(data);
+	data=JSON.parse(data);
+	latest=data.timestamp;
+	if(!latest) latest=new Date(0);
+	logs=data.logs;
 	logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); //chronological order
 	// build accounts array
    	accounts=[];
@@ -594,11 +597,10 @@ function load() {
 	listAccounts();
 }
 function save() {
-	var json=JSON.stringify(logs);
+	var data={"timestamp":new Date(),"logs":logs}
+	var json=JSON.stringify(data);
 	window.localStorage.setItem('MoneyData',json);
 	console.log(logs.length+' logs saved');
-	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
 }
 // SOLID CODE
 function connect() {
@@ -721,11 +723,13 @@ totals=JSON.parse(window.localStorage.getItem('totals')); // grand totals for ea
 console.log('totals: '+totals);
 if(totals==null) totals=[];
 console.log(totals.length+' totals');
+/*
 latest=window.localStorage.getItem('latest');
 if(!latest) {
 	latest=new Date(0).toString(); // defaults to 1970
 	window.localStorage.setItem('latest',latest);
 }
+*/
 syncDay=window.localStorage.getItem('syncDay');
 if(!syncDay) {
 	syncDay=new Date(0)/86400000; // default to 1970

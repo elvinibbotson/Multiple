@@ -365,21 +365,23 @@ function load() {
 	var data=localStorage.getItem('HealthData');
 	if(!data) {
 		message('No data - sync?');
+		latest=new Date(0);
 		return;
 	}
 	console.log('data: '+data.length+' bytes');
-    logs=JSON.parse(data);
+    data=JSON.parse(data);
+    latest=data.timestamp;
+    if(!latest) latest=new Date(0);
+    logs=data.logs;
     console.log(logs.length+' logs read');
     logs.sort(function(a,b) {return Date.parse(a.date)-Date.parse(b.date)}); // date order
 	populateList();
 }
 function save() {
-	var data=JSON.stringify(logs);
-	window.localStorage.setItem('HealthData',data);
+	var data={"timestamp":new Date(),"logs":logs}
+	var json=JSON.stringify(data);
+	window.localStorage.setItem('HealthData',json);
 	console.log('data saved to HealthData');
-	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
-	console.log('latest change: '+latest);
 }
 // SOLID CODE
 function connect() {
@@ -486,9 +488,11 @@ id("background").width=scr.w;
 id("background").height=scr.h;
 canvas=id('canvas').getContext('2d');
 background=id('background').getContext('2d');
+/*
 latest=window.localStorage.getItem('latest');
 if(!latest) latest=new Date(0); // defaults to 1970
 console.log('latest change '+latest);
+*/
 syncDay=window.localStorage.getItem('syncDay');
 console.log('latest sync: '+syncDay);
 if(!syncDay) {
