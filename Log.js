@@ -245,10 +245,11 @@ function load() {
 	var data=localStorage.getItem('LogData');
 	if(!data) {
 		message('NO DATA');
-		latest=new Date(0).toString();
+		latest=new Date(0);
 		return;
 	}
-	logs=JSON.parse(data).logs;
+	data=JSON.parse(data);data.timestamp;
+	logs=data.logs;
 	console.log(logs.length+' logs read');
 	tags=[]; // build tag list
 	for(var i=0;i<logs.length;i++) {
@@ -279,12 +280,12 @@ function load() {
 	populateList();
 }
 function save() {
-	var json=JSON.stringify(logs);
-	// console.log('data to save: '+json);
+	var data={"timestamp":new Date(),"logs":logs};
+	var json=JSON.stringify(data);
 	window.localStorage.setItem('LogData',json);
 	console.log('data saved to LogData');
-	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
+	// latest=new Date().toString();
+	// window.localStorage.setItem('latest',latest);
 }
 // SOLID CODE
 function connect() {
@@ -317,9 +318,9 @@ async function sync() {
 	});
 	console.log('response: '+response.ok);
 	if(response.ok) {
-		logs=await response.json();
+		body=await response.json();
 		console.log('response - last modified: '+response.lastModified);
-		// logs=body.logs;
+		logs=body.logs;
 		save();
 		message(logs.length+' logs downloaded',false);
 		disconnect();
