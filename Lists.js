@@ -34,10 +34,11 @@ id('main').addEventListener('touchend', function(event) {
     if(Math.abs(drag.y)>50) return; // ignore vertical drags
     if(drag.x<-50) { // drag right to go back/decrease depth...
     	if(depth<1) { // canot decrease depth so exit
+    		console.log('exit');
     		window.location.href='index.html';
     		return;
     	}
-        console.log('path: '+path);
+        console.log('path: '+path+'; depth: '+depth);
         if(path[path.length-1]=='CHECK') {
             path.pop();
             populateList(); // ...or just return from 'check' view
@@ -47,7 +48,7 @@ id('main').addEventListener('touchend', function(event) {
         depth--;
         if(depth<1) {
         	list.path='';
-        	id('heading').innerHTML='SolidLists';
+        	id('heading').innerHTML='Lists';
         }
 		else {
 	    	list.path=path[0];

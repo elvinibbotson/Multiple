@@ -72,7 +72,6 @@ input[type=number] {
     float: right;
     accent-color: #000;
 }
-
 .sign {
     background: none;
 	width: 24px;
@@ -94,7 +93,6 @@ input[type=number] {
   font-size: 1.5em;
   z-index: 5;
 }
-*/
 #buttonSync {
 	float: right;
 	width: 24px;
@@ -103,7 +101,6 @@ input[type=number] {
 	margin-right: 20px;
 	background: url(sync24px.svg) center center no-repeat;
 }
-
 .text-button {
 	border: none;
 	margin: 15px;
@@ -114,11 +111,9 @@ input[type=number] {
 	background: none;
 	float: right;
 }
-
 .text-button:disabled {
 	color: gray;
 }
-
 .round-button {
 	display: block;
 	position: fixed;
@@ -128,13 +123,11 @@ input[type=number] {
 	border-radius: 50%;
 	z-index: 5;
 }
-
 .round-button img {
 	display: block;
 	width: 24px;
 	height: 24px;
 }
-  
 .list {
     margin-top: 36px;
     list-style: none;
@@ -143,7 +136,6 @@ input[type=number] {
     background-color: #444;
     padding: 0 0.5em;
 }
-
 .list-item {
 	width: 100%;
 	padding-top: 10px;
@@ -152,27 +144,24 @@ input[type=number] {
 	font-size: 1.2em; 
 	display: block;
 }
-
+*/
 .date {
 	color: white;
 	font-size: 0.8em;
 }
-
 .comment {
     position: absolute;
     left: 20%;
 }
-
 .amount {
 	float: right;
 	color: white;
 }
-
 .amount-debit {
 	float: right;
 	color: yellow;
 }
-
+/*
 .dialog {
 	position: fixed;
 	left: 0;
@@ -184,12 +173,10 @@ input[type=number] {
 	z-index: 10;
 	display: none;
 }
-
 .dialog-title {
   font-size: 1.2em;
   font-weight: bold;
 }
-
 .dialog-body {
   margin: 10px;
   width: 100%;
@@ -197,7 +184,6 @@ input[type=number] {
   font-size: 1.2em;
   background: none;
 }
-  
 .dialog-body select {
     width: 45%;
 	height: 32px;
@@ -205,20 +191,16 @@ input[type=number] {
 	font-size: 1.2em;
 	border: 1px solid white;
 	background-color: black;
-	/*display: none;*/
 }
-
 .dialog-buttons {
   margin: 10px;
 }
-
 .icon-button {
 	width: 36px;
 	height: 36px;
 	padding: 12px;
 	border: none;
 }
-/*
 #main {
 	padding-top: 10px;
   -webkit-box-flex: 1;
@@ -229,25 +211,23 @@ input[type=number] {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; 
   background: &333;
-    /*margin-top: 30px;*/
     width: 100%;
     position: relative;
     color: white;
     background-color: #444;
 }
-*/
 #heading {
   font-family: 'Courier',monospace;
   font-weight: bold;
   margin: 10px;
 }
-
+*/
 #listPanel {
 	position: absolute;
-	top: 36px;
+	margin-top: 40px;
 	width: 100%;
 }
-
+/*
 #curtain {
 	position: fixed;
 	left: 0;
@@ -257,66 +237,58 @@ input[type=number] {
 	background-color: #444;
 	opacity: 0.6;
 }
-
 #buttonNew {
 	right: 20px;
 	bottom: 20px;
 	background: url(add.svg) center center no-repeat;
 }
-
+*/
 #newAccountNameField {
   width: 240px;
   height: 32px;
   border: 1px solid white;
 }
-
 #newAccountBalanceField {
   width: 100px;
   height: 32px;
   border: 1px solid white;
 }
-
 #txAmountField {
 	width: 120px;
 	height: 32px;
 	border: 1px solid white;
 }
-
 #txTextField {
     border: 1px solid white;
 }
-
 #txDateField {
 	width: 125px;
 	height: 34px;
 	font-family: 'Courier',monospace;
 	border: 1px solid white;
 }
-
 #txTextField {
   width: 90%;
+  height: 36px;
 }
-
 #txAmountField {
     color: white;
 }
-
+/*
 #buttonAddNewAccount {
     background: url(add24px.svg) center center no-repeat;
     float: right;
 }
-
 #buttonAddTx {
     background: url(add24px.svg) center center no-repeat;
     float: right;
 }
-
 #buttonSaveTx {
     background: url(ok24px.svg) center center no-repeat;
     float: right;
 }
-
 #buttonDeleteTx, #buttonDeleteConfirm {
     background: url(delete24px.svg) center center no-repeat;
     float: left;
 }
+*/

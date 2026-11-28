@@ -75,6 +75,7 @@ label {
     font-size: 1.2em;
     vertical-align: top;
 }
+*/
 li {
 	width: 100%;
 	margin-top: 5px;
@@ -85,7 +86,7 @@ li {
 	background-color: #444;
 	display: block;
 }
-*/
+/*
 .dialog {
   	position: fixed;
 	left: 0;
@@ -110,11 +111,9 @@ li {
     margin: 10px;
 }
 .icon-button {
-    width: 36px;
+    width: 50px;
     height: 24px;
     border: none;
-    padding: 5px;
-    margin: 5px;
 }
 .text-button {
 	border: none;
@@ -143,7 +142,6 @@ li {
 	width: 24px;
 	height: 24px;
 }
-/*
 #header {
     position: fixed;
     top: 0;
@@ -180,7 +178,6 @@ li {
   -webkit-overflow-scrolling: touch;
   background-color: #444;
 }
-*/
 #list {
 	height: 100%;
     margin-top: 30px;
@@ -191,7 +188,6 @@ li {
     padding: 0 0.5em;
     z-index=10;
 }
-/*
 #curtain {
 	position: fixed;
 	left:0;
@@ -232,7 +228,7 @@ li {
 }
 #listDownButton, #noteDownButton {
     background: url(down24px.svg) center center no-repeat;
-     float: left;
+    float: left;
 }
 #deleteListButton, #deleteNoteButton {
 	float: left;
