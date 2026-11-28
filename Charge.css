@@ -49,11 +49,9 @@ input {
 	background-color: black;
 	border: solid white 1px;
 }
-
 li {
-	background: #666;
+	background: #FF0;
 }
-*/
 .action-button {
 	display: block;
 	position: fixed;
@@ -79,14 +77,15 @@ li {
     transition: opacity 0.2s ease-in-out;
     padding: 0 0.5em 3em;
 }
-
+*/
 .log-item {
 	margin-bottom: 5px;
 	display: block;
 	font-size: 1em;
-	color: white;
+	color: #FFF;
+	background-color: #666;
 }
-
+/*
 .right {
 	margin-right: 5px;
 	float: right;

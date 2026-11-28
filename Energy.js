@@ -41,8 +41,7 @@ id('main').addEventListener('touchmove', function(event) {
 	var x=event.changedTouches[0].clientX-dragStart.x;
 	x+=canvasL;
 	id('graphPanel').style.left=x+'px';
-	// id('graphBackground').style.left=0;
-	console.log('graphPanel.x: '+x+';  background.x: '+id('graphBackground').style.left);
+	// console.log('graphPanel.x: '+x+';  background.x: '+id('graphBackground').style.left);
 })
 id('main').addEventListener('touchend', function(event) {
     var drag={};
@@ -51,7 +50,12 @@ id('main').addEventListener('touchend', function(event) {
     // console.log('drag '+drag.x+','+drag.y+' view is '+view);
     if(view=='listView') {
     	if(Math.abs(drag.y)>50) return; // ignore vertical drag
-    	if(drag.x<-50) { // drag right to show graph
+    	if(drag.x<-50) {
+    		console.log('exit');
+    		window.location.href='index.html';
+    		return;
+    	}
+    	if(drag.x>50) { // drag right to show graph
     		console.log('drag.x is '+drag.x);
     		view='graph';
     		id('listPanel').style.display='none';
@@ -75,10 +79,11 @@ id('main').addEventListener('touchend', function(event) {
     	}
     }
 })
-// TAP HEADER
+/* TAP HEADER
 id('heading').addEventListener('click',function() {
 	window.location.href='index.html';
 })
+*/
 // TAP SYNC ICON
 id('buttonSync').addEventListener('click',sync)
 // NEW BUTTON
